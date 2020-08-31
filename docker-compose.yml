@@ -1,0 +1,26 @@
+version: '3'
+services:
+  web:
+    build:
+      context: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+    volumes:
+      - .:/myapp #共有フォルダの設定
+    tty: true
+    stdin_open: true
+  db:
+    image: postgres:12-alpine
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mysecretpassword1234
+      - PGPASSWORD=mysecretpassword1234
+    volumes:
+      - db-volume:/var/lib/postgresql/data
+volumes:
+  db-volume:
