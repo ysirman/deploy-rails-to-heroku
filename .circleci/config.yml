@@ -84,7 +84,16 @@ jobs: # a collection of steps
       # Save test results for timing analysis
       - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
           path: test_results
+
       # See https://circleci.com/docs/2.0/deployment-integrations/ for example deploy configs
+      # 参考：https://circleci.com/docs/ja/2.0/deployment-integrations/#heroku
+      - deploy:
+          name: Deploy Master to Heroku
+          # CircleCIの画面から登録した環境変数を使用：HEROKU_API_KEY / HEROKU_APP_NAME
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
+            fi
 
 workflows:
   version: 2
